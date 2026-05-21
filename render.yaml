@@ -1,0 +1,44 @@
+services:
+  # Backend API
+  - type: web
+    name: trade-agent-backend
+    runtime: python
+    region: singapore  # closest to your trading partners
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trade-agent-db
+          property: connectionString
+      - key: LLM_PROVIDER
+        value: deepseek
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_MODEL
+        value: deepseek-chat
+      - key: DEEPSEEK_BASE_URL
+        value: https://api.deepseek.com
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        value: trade_agent_verify_2024
+      - key: AGENT_NAME
+        value: TradeBot
+      - key: AUTO_REPLY_ENABLED
+        value: "true"
+
+  # PostgreSQL database
+  - type: pserv
+    name: trade-agent-db
+    runtime: image
+    image:
+      image: postgres:16
+    plan: free
+    disk:
+      name: data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
