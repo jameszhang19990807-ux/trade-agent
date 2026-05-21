@@ -1,9 +1,12 @@
+databases:
+  - name: trade-agent-db
+    plan: free
+
 services:
-  # Backend API
   - type: web
     name: trade-agent-backend
     runtime: python
-    region: singapore  # closest to your trading partners
+    region: singapore
     plan: free
     buildCommand: cd backend && pip install -r requirements.txt
     startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -30,15 +33,3 @@ services:
         value: TradeBot
       - key: AUTO_REPLY_ENABLED
         value: "true"
-
-  # PostgreSQL database
-  - type: pserv
-    name: trade-agent-db
-    runtime: image
-    image:
-      image: postgres:16
-    plan: free
-    disk:
-      name: data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
