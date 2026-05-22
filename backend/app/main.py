@@ -2,6 +2,7 @@
 Trade Agent — Foreign Trade Sales Automation Platform
 FastAPI application entry point.
 """
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -10,8 +11,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 
 from .config import settings
 from .models.base import Base
+from .models.customer import Customer
+from .models.product import Product, PricingTier, ProductCategory
+from .models.conversation import Conversation, Message
 from .routers import webhook, dashboard
 
+logger = logging.getLogger(__name__)
 
 engine = create_async_engine(settings.async_database_url, echo=False)
 async_session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -19,12 +24,17 @@ async_session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_o
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables created successfully")
+    except Exception as e:
+        logger.warning(f"Database init skipped (will retry on first request): {e}")
     yield
-    # Shutdown
-    await engine.dispose()
+    try:
+        await engine.dispose()
+    except Exception:
+        pass
 
 
 app = FastAPI(

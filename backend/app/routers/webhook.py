@@ -26,7 +26,10 @@ async def verify_webhook(
     """Meta webhook verification endpoint."""
     ok, response = whatsapp_client.verify_webhook(hub_mode, hub_verify_token, hub_challenge)
     if ok:
-        return int(hub_challenge)  # Meta expects plain int
+        try:
+            return int(hub_challenge)
+        except (ValueError, TypeError):
+            return hub_challenge or "OK"
     raise HTTPException(status_code=403, detail="Verification failed")
 
 
