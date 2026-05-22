@@ -8,7 +8,6 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from anthropic import Anthropic
 from openai import OpenAI
 
 from ..config import settings
@@ -56,7 +55,6 @@ Conversation round: {round_number}
 
 class TradeAgent:
     def __init__(self):
-        self.anthropic = Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
         self.openai = OpenAI(api_key=settings.openai_api_key) if settings.openai_api_key else None
         self.deepseek = _get_deepseek() if settings.llm_provider == "deepseek" and settings.deepseek_api_key else None
 
@@ -304,14 +302,6 @@ Write a natural, helpful WhatsApp reply. Remember:
                 return resp.choices[0].message.content.strip()
             except Exception:
                 return self._template_reply(customer, intent, price)
-        elif settings.llm_provider == "anthropic" and self.anthropic:
-            resp = self.anthropic.messages.create(
-                model=settings.llm_model,
-                max_tokens=600,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
-            return resp.content[0].text.strip()
         elif self.openai:
             resp = self.openai.chat.completions.create(
                 model="gpt-4o",

@@ -32,9 +32,7 @@ class Settings(BaseSettings):
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
     deepseek_model: str = "deepseek-chat"
-    anthropic_api_key: str = ""
     openai_api_key: str = ""
-    llm_model: str = "deepseek-chat"
 
     # WhatsApp
     whatsapp_phone_number_id: str = ""

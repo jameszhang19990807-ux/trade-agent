@@ -6,7 +6,6 @@ import json
 from dataclasses import dataclass, field
 from typing import Optional
 
-from anthropic import Anthropic
 from openai import OpenAI
 
 from ..config import settings
@@ -107,27 +106,15 @@ Output ONLY valid JSON, no other text."""
 
 class IntentEngine:
     def __init__(self):
-        self.anthropic = Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
         self.openai = OpenAI(api_key=settings.openai_api_key) if settings.openai_api_key else None
 
     async def classify(self, message_text: str) -> IntentResult:
         if settings.llm_provider == "deepseek" and settings.deepseek_api_key:
             return await self._classify_openai_compat(message_text)
-        elif settings.llm_provider == "anthropic" and self.anthropic:
-            return await self._classify_anthropic(message_text)
         elif self.openai:
             return await self._classify_openai(message_text)
         else:
             return self._fallback_classify(message_text)
-
-    async def _classify_anthropic(self, message_text: str) -> IntentResult:
-        resp = self.anthropic.messages.create(
-            model=settings.llm_model,
-            max_tokens=512,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": message_text}],
-        )
-        return self._parse_response(resp.content[0].text)
 
     async def _classify_openai_compat(self, message_text: str) -> IntentResult:
         """DeepSeek or any OpenAI-compatible provider. Falls back to keyword on failure."""
