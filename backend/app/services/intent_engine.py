@@ -211,3 +211,10 @@ class IntentEngine:
 
 
 intent_engine = IntentEngine()
+
+
+def reload_engine():
+    """Called after settings update to clear cached clients."""
+    global _deepseek_client
+    _deepseek_client = None
+    intent_engine.__init__()

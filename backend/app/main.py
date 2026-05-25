@@ -14,7 +14,8 @@ from .models.base import Base
 from .models.customer import Customer
 from .models.product import Product, PricingTier, ProductCategory
 from .models.conversation import Conversation, Message
-from .routers import webhook, dashboard
+from .models.settings import TenantSetting
+from .routers import webhook, dashboard, settings_router
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +64,7 @@ async def db_session_middleware(request: Request, call_next):
 
 app.include_router(webhook.router)
 app.include_router(dashboard.router)
+app.include_router(settings_router.router)
 
 
 @app.get("/")

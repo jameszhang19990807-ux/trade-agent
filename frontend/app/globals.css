@@ -269,6 +269,31 @@ body {
   cursor: pointer;
 }
 
+/* Settings page */
+.settings-list { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+.setting-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+.setting-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.setting-header h3 { margin: 0; font-size: 15px; }
+.setting-desc { font-size: 13px; color: var(--text-muted); margin: 0 0 12px 0; }
+.setting-input-row { display: flex; gap: 8px; align-items: center; }
+.setting-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; font-family: monospace; }
+.setting-input:focus { border-color: var(--accent); }
+.badge-set { background: #E8F5E9; color: #2E7D32; }
+.badge-empty { background: #FFF3E0; color: #E65100; }
+.settings-actions { display: flex; gap: 12px; margin: 20px 0; }
+.btn-primary { background: var(--accent); color: #FFF; border: none; border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-ghost { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; color: var(--text-muted); }
+.btn-sm { font-size: 12px; }
+.alert { padding: 10px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 12px; }
+.alert-success { background: #E8F5E9; color: #2E7D32; }
+.alert-info { background: #E3F2FD; color: #1565C0; }
+.section-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+.settings-help { background: #F9F9FB; border-radius: 12px; padding: 20px 24px; margin-top: 28px; }
+.settings-help h3 { margin: 0 0 12px 0; font-size: 15px; }
+.settings-help ol { padding-left: 20px; font-size: 13px; line-height: 2; color: var(--text-muted); }
+.settings-help code { background: #EEE; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
 @media (max-width: 768px) {
   .sidebar { width: 60px; padding: 16px 8px; }
   .sidebar-link span { display: none; }
